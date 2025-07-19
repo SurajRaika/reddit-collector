@@ -1,0 +1,17 @@
+{
+  "subreddit": "IncredibleIndia",
+  "interval_minutes":30,
+  "max_attempts": {
+    "hot": 2,
+    "top": 3,
+    "new": 1
+  },
+    "subreddits": [
+    ["india_tourism", "hot", false],
+    ["india_tourism", "hot", true],
+    ["india_tourism", "top", false],
+    ["IncredibleIndia", "new", false],
+    ["india_tourism", "hot", false]
+  ]
+
+}

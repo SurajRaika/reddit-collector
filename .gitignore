@@ -1,0 +1,8 @@
+venv/
+collector/downloads/
+collector/downloaded_urls.txt
+blocked_users.txt
+counter.txt
+__pycache__/
+*.pyc
+*.so
