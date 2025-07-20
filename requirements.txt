@@ -1,5 +1,6 @@
 certifi==2025.7.14
 charset-normalizer==3.4.2
+colorama==0.4.6
 decorator==4.4.2
 idna==3.10
 imageio==2.37.0
@@ -14,3 +15,4 @@ RedDownloader==4.3.0
 requests==2.32.4
 tqdm==4.62.3
 urllib3==2.5.0
+watchdog==6.0.0

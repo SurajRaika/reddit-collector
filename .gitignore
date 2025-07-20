@@ -1,5 +1,6 @@
 venv/
-collector/downloads/
+collector/downloads/*
+!collector/downloads/.gitkeep
 collector/downloaded_urls.txt
 blocked_users.txt
 counter.txt

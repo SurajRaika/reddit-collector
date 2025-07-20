@@ -5,10 +5,11 @@ from pathlib import Path
 
 import requests
 from RedDownloader import RedDownloader
+SCRIPT_DIR = Path(__file__).parent.resolve()
 
-CONFIG_FILE       = Path("config.json")
-CACHE_FILE        = Path("downloaded_urls.txt")
-BASE_DOWNLOAD_DIR = Path("downloads")
+CONFIG_FILE       = SCRIPT_DIR / "config.json"
+CACHE_FILE        = SCRIPT_DIR / "downloaded_urls.txt"
+BASE_DOWNLOAD_DIR = SCRIPT_DIR / "downloads"
 USER_AGENT_HEADER = {"User-Agent": "RedDownloaderScript/1.0"}
 CONFIG = {}  # Global config dictionary
 
