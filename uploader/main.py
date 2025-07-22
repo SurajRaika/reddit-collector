@@ -7,22 +7,64 @@ import threading
 from pathlib import Path
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
+from youtube_authenticate import YouTubeAuthenticator
+
+from googleapiclient.http import MediaFileUpload
+from googleapiclient.errors import HttpError
+
+
 
 # Path to the downloads folder
 DOWNLOADS_DIR = Path(__file__).resolve().parent.parent / "collector" / "downloads"
 
+youtube = YouTubeAuthenticator().get_service()
 
 def upload_post(info: dict, media_paths: list[str]) -> bool:
     """
-    Dummy upload function. Replace this with your actual upload logic.
+    Uploads the first video in media_paths to YouTube using YouTube Data API.
     """
-    print("Uploading:")
-    print("  Title:", info.get("title"))
-    print("  Author:", info.get("author"))
-    print("  URL:", info.get("url"))
-    print("  Media files:", media_paths)
-    return False
+    if not media_paths:
+        print("❌ No media to upload.")
+        return False
 
+    video_path = media_paths[0]  # assuming first file is the video
+
+    youtube = YouTubeAuthenticator().get_service()
+
+    title = info.get("title", "Untitled Video")
+    description = f"Video posted by {info.get('author', 'Unknown')}\n\nOriginal URL: {info.get('url', '')}"
+
+    body = {
+        "snippet": {
+            "title": title,
+            "description": description,
+            "tags": ["Reddit", "PythonUploader", "Automation"],
+            "categoryId": "22",  # "People & Blogs"
+        },
+        "status": {
+            "privacyStatus": "public",     # 🔓 Public visibility
+            "madeForKids": False           # 🚫 Not made for kids
+        }
+    }
+
+    media = MediaFileUpload(video_path, chunksize=-1, resumable=True, mimetype="video/*")
+
+    try:
+        request = youtube.videos().insert(part="snippet,status", body=body, media_body=media)
+        response = None
+
+        print(f"📤 Uploading '{title}'...")
+        while response is None:
+            status, response = request.next_chunk()
+            if status:
+                print(f"🔄 Upload progress: {int(status.progress() * 100)}%")
+
+        print(f"✅ Upload complete! Video ID: {response['id']}")
+        return True
+
+    except HttpError as e:
+        print(f"❌ Upload failed: {e}")
+        return False
 
 def try_upload_post(post_folder: Path):
     info_path = post_folder / "info.json"

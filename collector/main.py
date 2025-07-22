@@ -78,16 +78,25 @@ def try_one(subreddit: str, sort: str, only_vid: bool = False) -> bool:
                 cachefile=str(CACHE_FILE)
             )
             
-
-            # Check if anything was downloaded
-            if not any(folder.iterdir()):
-                print("✖ No videos downloaded — folder is empty.")
-                folder.rmdir()
+            # Check if any .mp4 video was downloaded in folder or subfolders
+            mp4_found = any(p.suffix == ".mp4" for p in folder.rglob("*"))
+            if not mp4_found:
+                print("✖ No videos downloaded — no .mp4 files found.")
+                # Remove folder if empty
+                if not any(folder.iterdir()):
+                    folder.rmdir()
                 return False
+            
+            author = file_obj.GetPostAuthors()[0]
+            title = file_obj.GetPostTitles()[0]
+
 
             # Save basic info for batch download
             info = {
                 "subreddit": subreddit,
+                "title": title,
+                "author": author,
+
                 "sort_type": sort,
                 "download_type": "videos_only",
                 "downloaded": datetime.now().isoformat()

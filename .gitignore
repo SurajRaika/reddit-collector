@@ -7,3 +7,4 @@ counter.txt
 __pycache__/
 *.pyc
 *.so
+client_secret.json
